@@ -1,7 +1,7 @@
 package io.srv.userservice;
 
 import io.srv.userservice.domain.User;
-import io.srv.userservice.dto.request.RoleDTO;
+import io.srv.userservice.dto.request.RoleRequestDTO;
 import io.srv.userservice.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -26,19 +26,18 @@ public class UserserviceApplication {
 			userService.saveUser(new User(null, "Asif", "asif699", "asif@123", new ArrayList<>()));
 			userService.saveUser(new User(null, "Niraj", "niraj699", "niraj@123", new ArrayList<>()));
 
-			userService.saveRole(new RoleDTO("MANAGER"));
-			userService.saveRole(new RoleDTO("ADMIN"));
-			userService.saveRole(new RoleDTO("USER"));
+			userService.saveRole(new RoleRequestDTO("manager"));
+			userService.saveRole(new RoleRequestDTO("admin"));
+			userService.saveRole(new RoleRequestDTO("user"));
 
-			userService.addRoleToUser("srvkmr699", "ADMIN");
-			userService.addRoleToUser("asif699", "MANAGER");
-			userService.addRoleToUser("niraj699","USER");
+			userService.addRoleToUser("srvkmr699", "admin");
+			userService.addRoleToUser("asif699", "manager");
+			userService.addRoleToUser("niraj699","user");
 		};
 	}
 
 	@Bean
-	PasswordEncoder passwordEncoder() {
+	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
 }

@@ -2,7 +2,7 @@ package io.srv.userservice.service;
 
 import io.srv.userservice.domain.Role;
 import io.srv.userservice.domain.User;
-import io.srv.userservice.dto.request.RoleDTO;
+import io.srv.userservice.dto.request.RoleRequestDTO;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public interface UserService {
      * @param role
      * @return
      */
-    Role saveRole(RoleDTO roleDTO);
+    Role saveRole(RoleRequestDTO roleRequestDTO);
 
     /**
      * This method is to assign any specific role to any specific user.

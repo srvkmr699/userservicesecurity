@@ -7,17 +7,12 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.srv.userservice.domain.Role;
 import io.srv.userservice.domain.User;
-import io.srv.userservice.dto.request.AddRoleToUserDTO;
-import io.srv.userservice.dto.request.RoleDTO;
 import io.srv.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -43,6 +38,7 @@ public class UserController {
 
     private final UserService userService;
 
+
     @GetMapping("/getAll")
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity.ok().body(userService.getMultipleUsers());
@@ -52,18 +48,6 @@ public class UserController {
     public ResponseEntity<User> saveUser(@RequestBody User user) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/user/create").toUriString());
         return ResponseEntity.created(uri).body(userService.saveUser(user));
-    }
-
-    @PostMapping("/role/create")
-    public ResponseEntity<Role> saveRole(@RequestBody RoleDTO roleDTO) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/role/create").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveRole(roleDTO));
-    }
-
-    @PostMapping("/assignRole")
-    public ResponseEntity<Role> saveRole(@RequestBody AddRoleToUserDTO addRoleToUserDTO) {
-        userService.addRoleToUser(addRoleToUserDTO.getUserName(), addRoleToUserDTO.getRoleName());
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("getOne/{userName}")

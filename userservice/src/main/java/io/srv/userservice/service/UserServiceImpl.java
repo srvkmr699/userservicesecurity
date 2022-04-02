@@ -2,49 +2,26 @@ package io.srv.userservice.service;
 
 import io.srv.userservice.domain.Role;
 import io.srv.userservice.domain.User;
-import io.srv.userservice.dto.request.RoleDTO;
+import io.srv.userservice.dto.request.RoleRequestDTO;
 import io.srv.userservice.repository.RoleRepository;
 import io.srv.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserName(username);
-        if(Objects.isNull(user)) {
-            log.error("User not found in db");
-            throw new RuntimeException("User not found");
-        } else {
-            log.error("User found in db");
-        }
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        });
-        return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), authorities);
-    }
 
     @Override
     public User saveUser(User user) {
@@ -54,10 +31,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Role saveRole(RoleDTO roleDTO) {
-        log.info("saving role {} to the database", roleDTO.getName());
+    public Role saveRole(RoleRequestDTO roleRequestDTO) {
+        log.info("saving role {} to the database", roleRequestDTO.getName());
         Role role = new Role();
-        role.setName(roleDTO.getName());
+        role.setName(roleRequestDTO.getName());
         return roleRepository.save(role);
     }
 
